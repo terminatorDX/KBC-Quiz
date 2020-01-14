@@ -9,7 +9,14 @@ export default class Quiz extends Component {
         totalMarks: 0
     };
     prev() {
-        const { i } = this.state;
+        const { i, questions, answeredQuestion } = this.state;
+        if (
+            questions[i].answerCorrect &&
+            questions[i].answerCorrect === answeredQuestion[i]
+        ) {
+            const correct = true;
+            answered = true;
+        }
         if (i > 0) {
             this.setState({
                 i: this.state.i - 1,
@@ -56,7 +63,7 @@ export default class Quiz extends Component {
             totalMarks,
             answeredQuestion
         } = this.state;
-        console.log(i, "-------------------------------");
+        var answered = true;
         const prevButton = (
             <button
                 className="btn col"
@@ -66,6 +73,7 @@ export default class Quiz extends Component {
                 <p className="lead">prev</p>
             </button>
         );
+
         if (finished)
             return (
                 <h1 className="text-center m-5 text-primary">
@@ -89,11 +97,7 @@ export default class Quiz extends Component {
                                     <button
                                         className="btn col"
                                         key={value.key}
-                                        disabled={
-                                            questions[i].answerCorrect
-                                                ? false
-                                                : true
-                                        }
+                                        disabled={answered ? false : true}
                                         onClick={() => {
                                             this.click(
                                                 value.key,
