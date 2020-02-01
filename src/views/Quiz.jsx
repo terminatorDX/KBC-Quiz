@@ -2,97 +2,89 @@ import React, { Component } from "react";
 import questions from "../data/questions";
 export default class Quiz extends Component {
     state = {
-        i: 0,
+        questionCount: 0,
         questions: [...questions],
         finished: false,
         answeredQuestion: [],
         totalMarks: 0
     };
     prev() {
-        const { i, questions, answeredQuestion } = this.state;
+        const { questionCount, questions, answeredQuestion } = this.state;
         if (
-            questions[i].answerCorrect &&
-            questions[i].answerCorrect === answeredQuestion[i]
+            questions[questionCount].answerCorrect &&
+            questions[questionCount].answerCorrect ===
+                answeredQuestion[questionCount]
         ) {
-            const correct = true;
-            answered = true;
+            console.log("answered question  ", answeredQuestion[questionCount]);
         }
-        if (i > 0) {
+        if (questionCount > 0) {
             this.setState({
-                i: this.state.i - 1,
+                questionCount: this.state.questionCount - 1,
                 finished: false
             });
         } else {
             this.setState({
-                i: 0,
+                questionCount: 0,
                 finished: true
             });
         }
     }
     click(given, answer) {
-        const { i } = this.state;
+        const { questionCount } = this.state;
         var joined = this.state.answeredQuestion.concat(answer);
-        this.setState({ answeredQuestion: joined });
+        this.setState({ answeredQuestion: joined }); //to add ht e list of questions answered
         if (given === answer) {
             this.setState({
                 totalMarks: this.state.totalMarks + 1
             });
         }
-        // if (given !== answer) {
-        //     this.setState({
-        //         answeredQuestion: given
-        //     });
-        // }
-        if (i < 1) {
-            console.log(answer, i);
+        if (questionCount === 0) {
+            console.log(answer, questionCount, "questionCount<1");
             this.setState({
-                i: i + 1
+                questionCount: questionCount + 1
             });
         } else {
-            console.log(answer, i, "else");
+            console.log(answer, questionCount, "else");
             this.setState({
                 finished: true
             });
         }
+        console.log("questionCount questionCount=======", this.state.i);
     }
     render() {
-        const {
-            i,
-            questions,
-            finished,
-            totalMarks,
-            answeredQuestion
-        } = this.state;
+        const { questionCount, questions, finished, totalMarks } = this.state;
         var answered = true;
-        const prevButton = (
-            <button
-                className="btn col"
-                onClick={() => {
-                    this.prev(true);
-                }}>
-                <p className="lead">prev</p>
-            </button>
-        );
 
         if (finished)
             return (
                 <h1 className="text-center m-5 text-primary">
-                    {prevButton}
+                    <button className="btn btn-success m-auto p-auto">
+                        <a href="/">Home</a>
+                    </button>
+                    <br />
                     Quiz is finished <br />
                     Your answer being {totalMarks}
                 </h1>
             );
-
         return (
             <div className="container">
                 <div className="col">
                     <div className="container">
                         <h2 className="bg-primary text-black text-capitalize m-auto">
-                            {prevButton}
-                            {questions[i].questionno}
+                            <button
+                                className="btn col-3 btn-danger p-auto mx-auto"
+                                onClick={() => {
+                                    this.prev(true);
+                                }}
+                            >
+                                Prev
+                            </button>
+                            <p className="lead ml-5">
+                                {questions[questionCount].questionno}
+                            </p>
                         </h2>
                         <div className="bg-success row">
-                            {questions[i].options.map(value => {
+                            {questions[questionCount].options.map(value => {
                                 return (
                                     <button
                                         className="btn col"
@@ -101,9 +93,11 @@ export default class Quiz extends Component {
                                         onClick={() => {
                                             this.click(
                                                 value.key,
-                                                questions[i].answerCorrect
+                                                questions[questionCount]
+                                                    .answerCorrect
                                             );
-                                        }}>
+                                        }}
+                                    >
                                         <p className="lead">{value.ques}</p>
                                     </button>
                                 );

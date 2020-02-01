@@ -6,7 +6,7 @@ export default class Dashboard extends Component {
         return (
             <div>
                 <NavLink to="/admin/quiz" className="nav-link px-3">
-                    Home
+                    Start the Quiz
                 </NavLink>
             </div>
         );
