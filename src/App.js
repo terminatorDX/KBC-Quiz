@@ -8,8 +8,8 @@ function App() {
     return (
         <React.Fragment>
             <Switch>
-                <Route path="/admin" render={props => <Admin {...props} />} />
-                <Redirect from="/" to="/admin/dashboard" />
+                <Route path="/user" render={props => <Admin {...props} />} />
+                <Redirect from="/" to="/user/dashboard" />
             </Switch>
         </React.Fragment>
     );

@@ -5,13 +5,13 @@ const dashboardRoutes = [
         path: "/dashboard",
         name: "Dashboard",
         component: Dashboard,
-        layout: "/admin"
+        layout: "/user"
     },
     {
         path: "/quiz",
         name: "Quiz",
         component: Quiz,
-        layout: "/admin"
+        layout: "/user"
     }
 ];
 

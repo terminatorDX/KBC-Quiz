@@ -1,104 +1,115 @@
 import React, { Component } from "react";
 import questions from "../data/questions";
+import { Link } from "react-router-dom";
+
 export default class Quiz extends Component {
     state = {
-        questionCount: 0,
-        questions: [...questions],
+        qCount: 0,
+        ques: [...questions],
         finished: false,
-        answeredQuestion: [],
-        totalMarks: 0
+        givenAns: [],
+        total: 0
     };
+    previusButton() {
+        return (
+            <button
+                className="btn col-2 btn-danger py-3"
+                onClick={e => {
+                    e.preventDefault();
+                    this.prev(true);
+                }}
+            >
+                {this.state.qCount === 0 ? "Home" : "Prev"}
+            </button>
+        );
+    }
     prev() {
-        const { questionCount, questions, answeredQuestion } = this.state;
+        const { qCount, ques, givenAns } = this.state;
+        console.log("the count in the prev function is :", qCount);
         if (
-            questions[questionCount].answerCorrect &&
-            questions[questionCount].answerCorrect ===
-                answeredQuestion[questionCount]
+            ques[qCount].answerCorrect &&
+            ques[qCount].answerCorrect === givenAns[qCount]
         ) {
-            console.log("answered question  ", answeredQuestion[questionCount]);
+            console.log("answered question  ", givenAns[qCount]);
         }
-        if (questionCount > 0) {
+        if (qCount > 0) {
             this.setState({
-                questionCount: this.state.questionCount - 1,
+                qCount: this.state.qCount - 1,
                 finished: false
             });
-        } else {
+        }
+        if (qCount === 0) {
             this.setState({
-                questionCount: 0,
+                qCount: 0,
                 finished: true
             });
         }
     }
     click(given, answer) {
-        const { questionCount } = this.state;
-        var joined = this.state.answeredQuestion.concat(answer);
-        this.setState({ answeredQuestion: joined }); //to add ht e list of questions answered
+        const { qCount } = this.state;
+        console.log("the answer:", answer, "given:", given, "qcount:", qCount);
+        var joined = this.state.givenAns.concat(answer); //todo : adding the given answer to array of answers
+        this.setState({ givenAns: joined }); //todo:to add ht e list of ques answered
         if (given === answer) {
             this.setState({
-                totalMarks: this.state.totalMarks + 1
+                total: this.state.total + 1
             });
         }
-        if (questionCount === 0) {
-            console.log(answer, questionCount, "questionCount<1");
+        if (qCount === 0) {
+            console.log("answer :", answer, "qcount:", qCount, "qCount<1");
             this.setState({
-                questionCount: questionCount + 1
+                qCount: qCount + 1
             });
         } else {
-            console.log(answer, questionCount, "else");
+            console.log("answer :", answer, "qcount:", qCount, "else");
             this.setState({
                 finished: true
             });
         }
-        console.log("questionCount questionCount=======", this.state.i);
+        console.log(" qCount=====", this.state.qCount);
     }
     render() {
-        const { questionCount, questions, finished, totalMarks } = this.state;
+        const { qCount, ques, finished, total } = this.state;
         var answered = true;
 
         if (finished)
             return (
                 <h1 className="text-center m-5 text-primary">
                     <button className="btn btn-success m-auto p-auto">
-                        <a href="/">Home</a>
+                        <Link to="/">Retry</Link>
                     </button>
                     <br />
                     Quiz is finished <br />
-                    Your answer being {totalMarks}
+                    Your answer being {total}
                 </h1>
             );
         return (
-            <div className="container">
+            <div className="container my-5">
                 <div className="col">
                     <div className="container">
-                        <h2 className="bg-primary text-black text-capitalize m-auto">
-                            <button
-                                className="btn col-3 btn-danger p-auto mx-auto"
-                                onClick={() => {
-                                    this.prev(true);
-                                }}
-                            >
-                                Prev
-                            </button>
-                            <p className="lead ml-5">
-                                {questions[questionCount].questionno}
-                            </p>
-                        </h2>
-                        <div className="bg-success row">
-                            {questions[questionCount].options.map(value => {
+                        <div className="text-black text-center">
+                            {this.previusButton()}
+                            <h2 className="text-center m-3">
+                                {ques[qCount].questionno}
+                            </h2>
+                        </div>
+                        <div className="row">
+                            {ques[qCount].options.map(value => {
                                 return (
                                     <button
-                                        className="btn col"
+                                        className="btn col btn-light  m-1"
                                         key={value.key}
                                         disabled={answered ? false : true}
                                         onClick={() => {
                                             this.click(
                                                 value.key,
-                                                questions[questionCount]
-                                                    .answerCorrect
+                                                ques[qCount].answerCorrect
                                             );
                                         }}
                                     >
-                                        <p className="lead">{value.ques}</p>
+                                        <p className="lead p-auto text-dark mt-2 text-center">
+                                            <b>{value.ques}</b>
+                                        </p>
                                     </button>
                                 );
                             })}

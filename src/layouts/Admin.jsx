@@ -5,7 +5,7 @@ import routes from "../routes.js"; //TODO: this is bringing different routes in 
 class Admin extends Component {
     getRoutes = routes => {
         return routes.map((prop, key) => {
-            if (prop.layout === "/admin") {
+            if (prop.layout === "/user") {
                 return (
                     <Route
                         path={prop.layout + prop.path}
