@@ -11,12 +11,25 @@ export default class Quiz extends Component {
         givenAns: [],
         total: 0
     };
-    previusButton() {
-        if (this.state.qCount === 0) {
+    previusButton(id) {
+        if (id === 0) {
+            if (this.state.qCount === 0) {
+                return (
+                    <Link className="btn col-2 btn-danger py-3" to="/">
+                        Home
+                    </Link>
+                );
+            }
             return (
-                <Link className="btn col-2 btn-danger py-3" to="/">
-                    Home
-                </Link>
+                <button
+                    className="btn col-2 btn-danger py-3"
+                    onClick={e => {
+                        e.preventDefault();
+                        this.prev(true);
+                    }}
+                >
+                    Prev
+                </button>
             );
         }
         return (
@@ -24,10 +37,10 @@ export default class Quiz extends Component {
                 className="btn col-2 btn-danger py-3"
                 onClick={e => {
                     e.preventDefault();
-                    this.prev(true);
+                    this.next(true);
                 }}
             >
-                Prev
+                Next
             </button>
         );
     }
@@ -89,6 +102,28 @@ export default class Quiz extends Component {
             </button>
         );
     }
+    next() {
+        let count = this.state.qCount;
+        if (!this.state.givenAns[count]) {
+            var joined = this.state.givenAns.concat(-1);
+            this.setState({ givenAns: joined }); //todo:to add nothing in case of answered passed
+        }
+        count = count + 1;
+        console.log("the count in next menu is :", count);
+        if (count > -1 && count < 2) {
+            this.setState({
+                finished: false
+            });
+        }
+        if (count === 2) {
+            this.setState({
+                finished: true
+            });
+        }
+        this.setState({
+            qCount: count
+        });
+    }
     prev() {
         let count = this.state.qCount;
         count = count - 1;
@@ -139,13 +174,13 @@ export default class Quiz extends Component {
                         onClick={() => {
                             console.log("given ans:", this.state.givenAns);
                         }}
-                        className="btn btn-success m-auto p-auto mx-5"
+                        className="btn btn-success p-auto mx-5 my-5"
                     >
                         <Link to="/">Retry</Link>
                     </button>
                     <br />{" "}
                     <div className="text-black text-center">
-                        {this.previusButton()}
+                        {this.previusButton(0)}
                     </div>
                     <br />
                     <h1>
@@ -158,11 +193,12 @@ export default class Quiz extends Component {
             <div className="container my-5">
                 <div className="col">
                     <div className="container">
-                        <div className="text-black text-center">
-                            {this.previusButton()}
+                        <div className="text-black text-center my-2">
+                            {this.previusButton(0)}
                             <h2 className="text-center m-3">
                                 {ques[qCount].questionno}
                             </h2>
+                            {this.previusButton(1)}
                         </div>
                         <div className="row">
                             {ques[qCount].options.map(value => {
