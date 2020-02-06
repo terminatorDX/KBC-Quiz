@@ -40,7 +40,7 @@ export default class Quiz extends Component {
                     this.next(true);
                 }}
             >
-                Next
+                {this.state.qCount === 1 ? "Finish" : "Next"}
             </button>
         );
     }
@@ -56,7 +56,7 @@ export default class Quiz extends Component {
                 return (
                     <button
                         key={value.key}
-                        className="btn col btn-primary disabled m-1"
+                        className="col-md-6 col-sm-12 btn btn-primary disabled m-1 mx-auto"
                     >
                         <p className="lead p-auto text-dark mt-2 text-center">
                             <b>{value.ques}</b>
@@ -69,7 +69,7 @@ export default class Quiz extends Component {
                 return (
                     <button
                         key={value.key}
-                        className="btn col btn-success disabled m-1"
+                        className="col-md-6 col-sm-12 btn btn-success disabled m-1 mx-auto"
                     >
                         <p className="lead p-auto text-dark mt-2 text-center">
                             <b>{value.ques}</b>
@@ -80,7 +80,7 @@ export default class Quiz extends Component {
             return (
                 <button
                     key={value.key}
-                    className="btn col btn-light disabled m-1"
+                    className="btn col-md-6 col-sm-12  btn-light disabled m-1 mx-auto"
                 >
                     <p className="lead p-auto text-dark mt-2 text-center">
                         <b>{value.ques}</b>
@@ -91,7 +91,7 @@ export default class Quiz extends Component {
         return (
             <button
                 key={value.key}
-                className="btn col btn-light m-1"
+                className="btn col-md-6 col-sm-12  btn-light m-1 mx-auto"
                 onClick={() => {
                     this.click(value.key, ques[qCount].answerCorrect);
                 }}
