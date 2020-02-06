@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import questions from "../data/questions";
 import { Link } from "react-router-dom";
+// import PrevButton from "../components/PreviousButton/PrevButton";
 
 export default class Quiz extends Component {
     state = {
@@ -11,6 +12,13 @@ export default class Quiz extends Component {
         total: 0
     };
     previusButton() {
+        if (this.state.qCount === 0) {
+            return (
+                <Link className="btn col-2 btn-danger py-3" to="/">
+                    Home
+                </Link>
+            );
+        }
         return (
             <button
                 className="btn col-2 btn-danger py-3"
@@ -19,69 +27,132 @@ export default class Quiz extends Component {
                     this.prev(true);
                 }}
             >
-                {this.state.qCount === 0 ? "Home" : "Prev"}
+                Prev
+            </button>
+        );
+    }
+    getClassName(value) {
+        const { qCount, givenAns, ques } = this.state;
+        if (givenAns[qCount]) {
+            const correctanswer = ques[qCount].answerCorrect;
+
+            if (
+                givenAns[qCount] === correctanswer &&
+                correctanswer === value.key //todo: so that the answer given and the correct answer and the returned are all equal
+            ) {
+                return (
+                    <button
+                        key={value.key}
+                        className="btn col btn-primary disabled m-1"
+                    >
+                        <p className="lead p-auto text-dark mt-2 text-center">
+                            <b>{value.ques}</b>
+                        </p>
+                    </button>
+                );
+            } else if (
+                correctanswer === value.key //todo: so that the correct answer is marked along
+            ) {
+                return (
+                    <button
+                        key={value.key}
+                        className="btn col btn-success disabled m-1"
+                    >
+                        <p className="lead p-auto text-dark mt-2 text-center">
+                            <b>{value.ques}</b>
+                        </p>
+                    </button>
+                );
+            }
+            return (
+                <button
+                    key={value.key}
+                    className="btn col btn-light disabled m-1"
+                >
+                    <p className="lead p-auto text-dark mt-2 text-center">
+                        <b>{value.ques}</b>
+                    </p>
+                </button>
+            );
+        }
+        return (
+            <button
+                key={value.key}
+                className="btn col btn-light m-1"
+                onClick={() => {
+                    this.click(value.key, ques[qCount].answerCorrect);
+                }}
+            >
+                <p className="lead p-auto text-dark mt-2 text-center">
+                    <b>{value.ques}</b>
+                </p>
             </button>
         );
     }
     prev() {
-        const { qCount, ques, givenAns } = this.state;
-        console.log("the count in the prev function is :", qCount);
-        if (
-            ques[qCount].answerCorrect &&
-            ques[qCount].answerCorrect === givenAns[qCount]
-        ) {
-            console.log("answered question  ", givenAns[qCount]);
-        }
-        if (qCount > 0) {
+        let count = this.state.qCount;
+        count = count - 1;
+        console.log("the count in prev menu is :", count);
+        if (count > -1 && count < 2) {
             this.setState({
-                qCount: this.state.qCount - 1,
                 finished: false
             });
         }
-        if (qCount === 0) {
+        if (count === -1) {
             this.setState({
-                qCount: 0,
                 finished: true
             });
         }
+        this.setState({
+            qCount: count
+        });
     }
-    click(given, answer) {
-        const { qCount } = this.state;
-        console.log("the answer:", answer, "given:", given, "qcount:", qCount);
-        var joined = this.state.givenAns.concat(answer); //todo : adding the given answer to array of answers
+    click(quesKey, actualAns) {
+        //todo:the quesKey == given answer and actualAns == correct
+        let count = this.state.qCount;
+        count = count + 1;
+        var joined = this.state.givenAns.concat(quesKey);
         this.setState({ givenAns: joined }); //todo:to add ht e list of ques answered
-        if (given === answer) {
+        if (quesKey === actualAns) {
             this.setState({
                 total: this.state.total + 1
             });
         }
-        if (qCount === 0) {
-            console.log("answer :", answer, "qcount:", qCount, "qCount<1");
-            this.setState({
-                qCount: qCount + 1
-            });
-        } else {
-            console.log("answer :", answer, "qcount:", qCount, "else");
+        if (count === 2) {
+            console.log("answer :", quesKey, "qcount:", count, "else");
             this.setState({
                 finished: true
             });
         }
+        this.setState({
+            qCount: count
+        });
+        console.log("joined:", joined, "  given ans:", this.state.givenAns); //todo : adding the given answer to array of answers
         console.log(" qCount=====", this.state.qCount);
     }
     render() {
         const { qCount, ques, finished, total } = this.state;
-        var answered = true;
-
         if (finished)
             return (
-                <h1 className="text-center m-5 text-primary">
-                    <button className="btn btn-success m-auto p-auto">
+                <div className="text-center m-5 text-primary">
+                    <button
+                        onClick={() => {
+                            console.log("given ans:", this.state.givenAns);
+                        }}
+                        className="btn btn-success m-auto p-auto mx-5"
+                    >
                         <Link to="/">Retry</Link>
                     </button>
+                    <br />{" "}
+                    <div className="text-black text-center">
+                        {this.previusButton()}
+                    </div>
                     <br />
-                    Quiz is finished <br />
-                    Your answer being {total}
-                </h1>
+                    <h1>
+                        Quiz is finished <br />
+                        Your answer being {total}
+                    </h1>
+                </div>
             );
         return (
             <div className="container my-5">
@@ -95,27 +166,18 @@ export default class Quiz extends Component {
                         </div>
                         <div className="row">
                             {ques[qCount].options.map(value => {
-                                return (
-                                    <button
-                                        className="btn col btn-light  m-1"
-                                        key={value.key}
-                                        disabled={answered ? false : true}
-                                        onClick={() => {
-                                            this.click(
-                                                value.key,
-                                                ques[qCount].answerCorrect
-                                            );
-                                        }}
-                                    >
-                                        <p className="lead p-auto text-dark mt-2 text-center">
-                                            <b>{value.ques}</b>
-                                        </p>
-                                    </button>
-                                );
+                                return this.getClassName(value);
                             })}
                         </div>
                     </div>
                 </div>
+                <p className="lead text-center text-dark m-5">
+                    If the Color of Option in Previously aswered question is
+                    <b className="text-primary"> Blue</b> the it is the right
+                    answer otherwise if it is{" "}
+                    <b className="text-success">Green</b> ,it is the wrong
+                    answer
+                </p>
             </div>
         );
     }
