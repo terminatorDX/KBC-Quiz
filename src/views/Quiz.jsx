@@ -40,7 +40,7 @@ export default class Quiz extends Component {
                     this.next(true);
                 }}
             >
-                {this.state.qCount === 1 ? "Finish" : "Next"}
+                {this.state.qCount === 3 ? "Finish" : "Next"}
             </button>
         );
     }
@@ -110,7 +110,7 @@ export default class Quiz extends Component {
         }
         count = count + 1;
         console.log("the count in next menu is :", count);
-        if (count > -1 && count < 2) {
+        if (count > -1 && count < 4) {
             this.setState({
                 finished: false
             });
@@ -128,7 +128,7 @@ export default class Quiz extends Component {
         let count = this.state.qCount;
         count = count - 1;
         console.log("the count in prev menu is :", count);
-        if (count > -1 && count < 2) {
+        if (count > -1 && count < 4) {
             this.setState({
                 finished: false
             });
@@ -153,7 +153,7 @@ export default class Quiz extends Component {
                 total: this.state.total + 1
             });
         }
-        if (count === 2) {
+        if (count === 4) {
             console.log("answer :", quesKey, "qcount:", count, "else");
             this.setState({
                 finished: true

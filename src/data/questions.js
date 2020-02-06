@@ -38,10 +38,10 @@ var questions = [
         questionno: "Q.3 The first metal used by the man was ",
         answerCorrect: 1,
         options: [
-            { ques: "Iron", key: 0 },
-            { ques: "Copper", key: 1 },
-            { ques: "Aluminium", key: 2 },
-            { ques: "Gold", key: 3 }
+            { ques: "(A) Iron", key: 0 },
+            { ques: "(B) Copper", key: 1 },
+            { ques: "(C) Aluminium", key: 2 },
+            { ques: "(D) Gold", key: 3 }
         ]
     },
     {
