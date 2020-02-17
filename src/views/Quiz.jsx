@@ -193,7 +193,7 @@ export default class Quiz extends Component {
                 </div>
             );
         return (
-            <div className="container my-5">
+            <div className="my-5">
                 <div className="col">
                     <div className="container">
                         <div className="text-black text-center my-2">
