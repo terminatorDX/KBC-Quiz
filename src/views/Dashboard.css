@@ -1,6 +1,7 @@
 .outline {
-    width: 90%;
+    width: 96%;
     margin: auto;
+        margin-top: 20px;
 }
 #home-section {
     background: url("../images/background.png");
@@ -19,6 +20,6 @@
     top: 0;
     left: 0;
     width: 100%;
-    min-height: 700px;
+    min-height: 900px;
     background-color: rgba(0, 0, 0, 0.3);
 }

@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import questions from "../data/questions";
 import { Link } from "react-router-dom";
-// import PrevButton from "../components/PreviousButton/PrevButton";
-
+import "./Quiz.css";
 export default class Quiz extends Component {
     state = {
         qCount: 0,
@@ -15,14 +14,14 @@ export default class Quiz extends Component {
         if (id === 0) {
             if (this.state.qCount === 0) {
                 return (
-                    <Link className="btn col-2 btn-danger py-3" to="/">
+                    <Link className="btn col-2 btn-danger py-3 mx-1" to="/">
                         Home
                     </Link>
                 );
             }
             return (
                 <button
-                    className="btn col-2 btn-danger py-3"
+                    className="btn col-2 btn-danger py-3 mx-1"
                     onClick={e => {
                         e.preventDefault();
                         this.prev(true);
@@ -34,7 +33,7 @@ export default class Quiz extends Component {
         }
         return (
             <button
-                className="btn col-2 btn-danger py-3"
+                className="btn col-2 btn-danger py-3 mx-1"
                 onClick={e => {
                     e.preventDefault();
                     this.next(true);
@@ -58,7 +57,7 @@ export default class Quiz extends Component {
                 return (
                     <button
                         key={value.key}
-                        className="col-md-6 col-sm-12 btn btn-primary disabled m-1 mx-auto"
+                        className="col-12 btn btn-primary disabled my-3 mx-auto"
                     >
                         <p className="lead p-auto text-dark mt-2 text-center">
                             <b>{value.ques}</b>
@@ -71,9 +70,9 @@ export default class Quiz extends Component {
                 return (
                     <button
                         key={value.key}
-                        className="col-md-6 col-sm-12 btn btn-success disabled m-1 mx-auto"
+                        className="col-12 btn btn-success disabled my-3 mx-auto"
                     >
-                        <p className="lead p-auto text-dark mt-2 text-center">
+                        <p className="lead text-dark mt-2 text-center">
                             <b>{value.ques}</b>
                         </p>
                     </button>
@@ -82,7 +81,7 @@ export default class Quiz extends Component {
             return (
                 <button
                     key={value.key}
-                    className="btn col-md-6 col-sm-12  btn-light disabled m-1 mx-auto"
+                    className="btn col-12 btn-light disabled my-3 mx-auto"
                 >
                     <p className="lead p-auto text-dark mt-2 text-center">
                         <b>{value.ques}</b>
@@ -93,7 +92,7 @@ export default class Quiz extends Component {
         return (
             <button
                 key={value.key}
-                className="btn col-md-6 col-sm-12  btn-light m-1 mx-auto"
+                className="btn col-12 btn-light my-3 mx-auto"
                 onClick={() => {
                     this.click(value.key, ques[qCount].answerCorrect);
                 }}
@@ -193,20 +192,22 @@ export default class Quiz extends Component {
                 </div>
             );
         return (
-            <div className="my-5">
+            <div className="box">
                 <div className="col">
                     <div className="container">
-                        <div className="text-black text-center my-2">
+                        <div className="text-white text-center my-2">
                             {this.previusButton(0)}
+                            {this.previusButton(1)}
                             <h2 className="text-center m-3">
                                 {ques[qCount].questionno}
                             </h2>
-                            {this.previusButton(1)}
                         </div>
                         <div className="row">
-                            {ques[qCount].options.map(value => {
-                                return this.getClassName(value);
-                            })}
+                            <div className="col questions">
+                                {ques[qCount].options.map(value => {
+                                    return this.getClassName(value);
+                                })}
+                            </div>
                         </div>
                     </div>
                 </div>

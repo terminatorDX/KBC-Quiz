@@ -1,9 +1,6 @@
-.outline {
-    margin-top: 30px;
-}
 #home-section {
-    /* background: url(../images/home.jpg); */
-    background: url(../images/background.png);
+    background: url(../images/home.jpg);
+    /* background: url(../images/background.png);    */
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
