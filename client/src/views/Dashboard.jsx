@@ -9,14 +9,19 @@ export default class Dashboard extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            isAdmin: false,
             isLoggedin: false
         };
         this.onLoginChange = this.onLoginChange.bind(this);
+        this.onAdminChange = this.onAdminChange.bind(this);
     }
     onLoginChange(event) {
         this.setState(state => ({
             isLoggedin: event
         }));
+    }
+    onAdminChange(e) {
+        this.setState({ isTeacher: e });
     }
     render() {
         return (
@@ -24,6 +29,8 @@ export default class Dashboard extends Component {
                 <div className="row">
                     <div className="col-3">
                         <Form
+                            isAdmin={isAdmin}
+                            onLoginChange={this.onLoginChange}
                             isLoggedin={this.state.isLoggedin}
                             onLoginChange={this.onLoginChange}
                         />
