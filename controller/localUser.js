@@ -8,22 +8,37 @@ const Router = require("express").Router(),
 Router.post("/signup", (req, res) => {
     let errors = "";
     const { body } = req;
-    let { name } = body;
+    let { username } = body;
     const { password } = body;
-    const { isTeacher } = body;
     let usernameAlreadyChosen = false;
-    console.log("value recieved at /signup :", name, password, isTeacher);
-    User.findOne({ name: name })
-        .then(user => {
+    console.log("value recieved at /signup :", username, password);
+    User.findOne({ username: username })
+        .then((user, err) => {
             if (user) {
                 usernameAlreadyChosen = true;
-                errors = `name : ${req.body.name} is already in use`;
                 if (err) {
                     return res.send({
                         success: false,
                         message: "Error: Server error"
                     });
                 }
+                const userSession = new UserSession();
+                userSession.userId = user._id;
+                req.session.user = user;
+                userSession.save((err, doc) => {
+                    if (err) {
+                        console.log(err);
+                        return res.send({
+                            success: false,
+                            message: "Error: server error"
+                        });
+                    }
+                    return res.send({
+                        success: true,
+                        token: doc._id,
+                        message: "Valid sign in"
+                    });
+                });
                 return res.send({
                     success: false,
                     message: errors
@@ -39,12 +54,12 @@ Router.post("/signup", (req, res) => {
                 });
             }
             let newuser = new User();
-            newuser.name = name;
+            newuser.username = username;
             newuser.password = password;
-            newuser.isTeacher = isTeacher;
             console.log("newuser : ", newuser);
             newuser.save((err, user) => {
                 if (err) {
+                    console.log("err", err);
                     errors = "error in signup redirect";
                     return res.send({
                         success: false,
@@ -53,69 +68,20 @@ Router.post("/signup", (req, res) => {
                 }
                 return res.send({
                     success: true,
-                    message: "Signed up"
+                    message: "Now you can start the quiz",
+                    token: user._id
                 });
             });
         }); //end of then
 });
-
-Router.post("/login", (req, res) => {
-    let errors = "";
-    const { body } = req;
-    let { name } = body;
-    const { password } = body;
-    console.log("values recieved at /login : ", name, password);
-    User.find({
-            name: name
-        })
-        .then((user, err) => {
-            userExists = true;
-            console.log("user found :", user);
-            if (err) {
-                errors = "Error : server error";
-                console.warn(errors);
-                return res.send({
-                    success: false,
-                    message: errors
-                });
-            }
-            const userSession = new UserSession();
-            userSession.userId = user._id;
-            console.log("newusersession at login : ", userSession);
-            req.session.user = user;
-            req.session.localUser = user;
-            userSession.save((err, doc) => {
-                if (err) {
-                    console.log(err);
-                    return res.send({
-                        success: false,
-                        message: "Error: server error"
-                    });
-                }
-                return res.send({
-                    success: true,
-                    token: doc._id,
-                    message: "Valid sign in",
-                    teacher: req.session.user[0].isTeacher
-                });
-            });
-        })
-        .catch(err => {
-            errors = "user does not exist";
-            console.warn(err);
-            return res.send({
-                success: false,
-                message: errors
-            });
-        });
-});
-
 Router.get("/logout", (req, res) => {
     console.log("logging out : " + user);
-    UserSession.findOneAndUpdate({
+    UserSession.findOneAndUpdate(
+        {
             _id: user.id,
             isDeleted: false
-        }, {
+        },
+        {
             $set: {
                 isDeleted: true
             }
@@ -147,9 +113,9 @@ Router.get("/verify", (req, res, next) => {
     // ?token=test
     // Verify the token is one of a kind and it's not deleted.
     User.find({
-            _id: token,
-            isDeleted: false
-        })
+        _id: token,
+        isDeleted: false
+    })
         .then((user, err) => {
             if (err) {
                 return res.send({
@@ -162,13 +128,12 @@ Router.get("/verify", (req, res, next) => {
                     success: true,
                     message: "A Person has been found",
                     isTeacher: user.isTeacher
-                })
+                });
             }
             return res.send({
                 success: false,
-                message: "A Person not found",
-            })
-
+                message: "A Person not found"
+            });
         })
         .catch(err => {
             errors = "user does not exist";
@@ -180,4 +145,4 @@ Router.get("/verify", (req, res, next) => {
         });
 });
 
-module.exports = Router
+module.exports = Router;

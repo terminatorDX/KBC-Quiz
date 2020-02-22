@@ -1,6 +1,6 @@
 const mongoose = require("mongoose"),
     UserSchema = new mongoose.Schema({
-        name: {
+        username: {
             type: String,
             unique: true,
             required: true
@@ -9,7 +9,7 @@ const mongoose = require("mongoose"),
             type: String,
             required: true
         },
-        isTeacher: {
+        isAdmin: {
             type: Boolean,
             default: false
         },

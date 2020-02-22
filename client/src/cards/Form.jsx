@@ -1,11 +1,14 @@
 import React, { Component } from "react";
 import "./Form.css";
 import logo from "../images/logo.svg";
+const route = "http://localhost:4000";
 
 export class Form extends Component {
     state = {
         username: "",
-        password: ""
+        password: "",
+        error: "",
+        loginSuccess: false
     };
     handleChange = prop => event => {
         this.setState({
@@ -19,9 +22,8 @@ export class Form extends Component {
             return;
         }
 
-        this.props.onLoginChange(true);
         // Post request to backend
-        fetch(`https://localhost:4000/app/login`, {
+        fetch(`${route}/api/account/signup`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -33,11 +35,16 @@ export class Form extends Component {
         })
             .then(res => res.json())
             .then(json => {
+                this.setState({
+                    error: json.message,
+                    loginSuccess: json.success
+                });
                 if (json.success) {
+                    this.props.onLoginChange(true);
                     console.log("this route was successfull");
                     this.setState({
-                        username: "",
-                        password: ""
+                        password: "",
+                        loginSuccess: true
                     });
                 } else {
                     console.log("this route did not go through");
@@ -48,7 +55,7 @@ export class Form extends Component {
         return (
             <header id="home-section">
                 <div className="dark-overlay">
-                    <div className=" text-center py-5 mx-auto my-5">
+                    <div className=" text-center py-2 mx-auto my-2">
                         <img
                             src={logo}
                             alt="logo"
@@ -58,35 +65,47 @@ export class Form extends Component {
                         <p className="lead py-3 text-white">
                             Please fill out this form to register
                         </p>
-                        <form
-                            className="container px-5"
-                            onSubmit={this.handleSubmit}
-                        >
-                            <div className="form-group my-5">
-                                <input
-                                    value={this.state.username}
-                                    onChange={this.handleChange("username")}
-                                    type="text"
-                                    className="from-control form-control-lg"
-                                    placeholder="Username"
-                                />
+                        {!this.state.loginSuccess ? (
+                            <form
+                                className="container px-5"
+                                onSubmit={this.handleSubmit}>
+                                <div className="form-group my-5">
+                                    <input
+                                        value={this.state.username}
+                                        onChange={this.handleChange("username")}
+                                        type="text"
+                                        className="from-control form-control-lg"
+                                        placeholder="Username"
+                                    />
+                                </div>
+                                <div className="form-group my-5">
+                                    <input
+                                        value={this.state.password}
+                                        onChange={this.handleChange("password")}
+                                        type="password"
+                                        className="from-control form-control-lg"
+                                        placeholder="Password"
+                                    />
+                                </div>
+                                <button
+                                    type="submit"
+                                    className="btn btn-success btn-block btn-outline py-3">
+                                    Register
+                                </button>
+                                <h3 className="text-center text-danger">
+                                    <b> {this.state.error} </b>
+                                </h3>
+                            </form>
+                        ) : (
+                            <div>
+                                <h2 className="text-center text-primary">
+                                    <b> {this.state.username}</b> has logged in
+                                </h2>
+                                <h3 className="text-center text-success">
+                                    <b> {this.state.error} </b>
+                                </h3>
                             </div>
-                            <div className="form-group my-5">
-                                <input
-                                    value={this.state.password}
-                                    onChange={this.handleChange("password")}
-                                    type="password"
-                                    className="from-control form-control-lg"
-                                    placeholder="password"
-                                />
-                            </div>
-                            <button
-                                type="submit"
-                                className="btn btn-success btn-block btn-outline py-3"
-                            >
-                                Register
-                            </button>
-                        </form>
+                        )}
                     </div>
                 </div>
             </header>

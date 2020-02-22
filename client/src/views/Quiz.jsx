@@ -12,7 +12,7 @@ export default class Quiz extends Component {
     };
     previusButton(id) {
         if (id === 0) {
-            if (this.state.qCount === 0) {
+            if (this.state.qCount !== 0) {
                 return (
                     <Link className="btn col-2 btn-danger py-3 mx-1" to="/">
                         Home
@@ -25,8 +25,7 @@ export default class Quiz extends Component {
                     onClick={e => {
                         e.preventDefault();
                         this.prev(true);
-                    }}
-                >
+                    }}>
                     Prev
                 </button>
             );
@@ -37,8 +36,7 @@ export default class Quiz extends Component {
                 onClick={e => {
                     e.preventDefault();
                     this.next(true);
-                }}
-            >
+                }}>
                 {this.state.qCount === this.state.ques.length - 1
                     ? "Finish"
                     : "Next"}
@@ -57,8 +55,7 @@ export default class Quiz extends Component {
                 return (
                     <button
                         key={value.key}
-                        className="col-12 btn btn-primary disabled my-3 mx-auto"
-                    >
+                        className="col-12 btn btn-primary disabled my-3 mx-auto">
                         <p className="lead p-auto text-dark mt-2 text-center">
                             <b>{value.ques}</b>
                         </p>
@@ -70,8 +67,7 @@ export default class Quiz extends Component {
                 return (
                     <button
                         key={value.key}
-                        className="col-12 btn btn-success disabled my-3 mx-auto"
-                    >
+                        className="col-12 btn btn-success disabled my-3 mx-auto">
                         <p className="lead text-dark mt-2 text-center">
                             <b>{value.ques}</b>
                         </p>
@@ -81,8 +77,7 @@ export default class Quiz extends Component {
             return (
                 <button
                     key={value.key}
-                    className="btn col-12 btn-light disabled my-3 mx-auto"
-                >
+                    className="btn col-12 btn-light disabled my-3 mx-auto">
                     <p className="lead p-auto text-dark mt-2 text-center">
                         <b>{value.ques}</b>
                     </p>
@@ -95,8 +90,7 @@ export default class Quiz extends Component {
                 className="btn col-12 btn-light my-3 mx-auto"
                 onClick={() => {
                     this.click(value.key, ques[qCount].answerCorrect);
-                }}
-            >
+                }}>
                 <p className="lead p-auto text-dark mt-2 text-center">
                     <b>{value.ques}</b>
                 </p>
@@ -176,8 +170,7 @@ export default class Quiz extends Component {
                         onClick={() => {
                             console.log("given ans:", this.state.givenAns);
                         }}
-                        className="btn btn-success p-auto mx-5 my-5"
-                    >
+                        className="btn btn-success p-auto mx-5 my-5">
                         <Link to="/">Retry</Link>
                     </button>
                     <br />{" "}
@@ -198,9 +191,9 @@ export default class Quiz extends Component {
                         <div className="text-white text-center my-2">
                             {this.previusButton(0)}
                             {this.previusButton(1)}
-                            <h2 className="text-center m-3">
+                            <h3 className="text-center m-3">
                                 {ques[qCount].questionno}
-                            </h2>
+                            </h3>
                         </div>
                         <div className="row">
                             <div className="col questions">

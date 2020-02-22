@@ -10,7 +10,7 @@ const express = require("express"),
     baseRoutes = require("./controller/baseRoutes"),
     PORT = process.env.port || 4000,
     localUser = require("./controller/localUser"),
-    mongoKey = key.mongodb.Local;
+    mongoKey = key.mongodb.MLab;
 
 app.use(cors());
 app.use(session({ secret: key.secret }));

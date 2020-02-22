@@ -1,7 +1,8 @@
 .outline {
     width: 96%;
     margin: auto;
-        margin-top: 20px;
+    margin-top: 20px;
+    overflow: hidden;
 }
 #home-section {
     background: url("../images/background.png");
@@ -11,7 +12,7 @@
     height: 100%;
     width: 100%;
     background-attachment: fixed;
-    min-height: 900px;
+    min-height: 700px !important;
     position: relative;
     font-family: "Roboto";
 }
@@ -20,6 +21,6 @@
     top: 0;
     left: 0;
     width: 100%;
-    min-height: 900px;
+    min-height: 700px !important;
     background-color: rgba(0, 0, 0, 0.3);
 }

@@ -3,8 +3,6 @@ import "./Dashboard.css";
 import Form from "../cards/Form";
 import "typeface-roboto";
 import Quiz from "../views/Quiz";
-
-import { NavLink } from "react-router-dom";
 export default class Dashboard extends Component {
     constructor(props) {
         super(props);
@@ -29,8 +27,7 @@ export default class Dashboard extends Component {
                 <div className="row">
                     <div className="col-3">
                         <Form
-                            isAdmin={isAdmin}
-                            onLoginChange={this.onLoginChange}
+                            isAdmin={this.state.isAdmin}
                             isLoggedin={this.state.isLoggedin}
                             onLoginChange={this.onLoginChange}
                         />
@@ -41,14 +38,11 @@ export default class Dashboard extends Component {
                                 {this.state.isLoggedin ? (
                                     <Quiz />
                                 ) : (
-                                    <NavLink
-                                        to="/user/quiz"
-                                        className="nav-link px-3"
-                                    >
+                                    <div className="px-3">
                                         <h4 className="text-dark text-center mt-5 mx-auto py-5">
                                             Please Login to Start the quiz
                                         </h4>
-                                    </NavLink>
+                                    </div>
                                 )}
                             </div>
                         </header>
