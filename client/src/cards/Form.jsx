@@ -22,7 +22,7 @@ export class Form extends Component {
             alert("Please fill out the form");
             return;
         }
-        // this.props.onLoginChange(true);
+        this.props.onLoginChange(true);
         // const json =await LoginFetch(this.state.username, this.state.password);
         fetch(`${route}/api/account/signup`, {
             method: "POST",

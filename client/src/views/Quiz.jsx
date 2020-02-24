@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import questions from "../data/questions";
-import { Link } from "react-router-dom";
 import "./Quiz.css";
 import { QuizAns } from "../Fetch/Post";
 export default class Quiz extends Component {
@@ -15,21 +14,17 @@ export default class Quiz extends Component {
         if (id === 0) {
             if (this.state.qCount !== 0) {
                 return (
-                    <Link className="btn col-2 btn-danger py-3 mx-1" to="/">
-                        Home
-                    </Link>
+                    <button
+                        className="btn col-2 btn-danger py-3 mx-1"
+                        onClick={e => {
+                            e.preventDefault();
+                            this.prev(true);
+                        }}>
+                        Prev
+                    </button>
                 );
             }
-            return (
-                <button
-                    className="btn col-2 btn-danger py-3 mx-1"
-                    onClick={e => {
-                        e.preventDefault();
-                        this.prev(true);
-                    }}>
-                    Prev
-                </button>
-            );
+            return;
         }
         return (
             <button
@@ -102,7 +97,7 @@ export default class Quiz extends Component {
         let count = this.state.qCount;
         if (!this.state.givenAns[count]) {
             var joined = this.state.givenAns.concat(-1);
-            this.setState({ givenAns: joined }); //todo:to add nothing in case of answered passed
+            this.setState({ givenAns: joined }); //todo:to add nothing("-1") in case of next answer
         }
         count = count + 1;
         console.log("the count in next menu is :", count);
@@ -113,7 +108,6 @@ export default class Quiz extends Component {
         }
         if (count === this.state.ques.length) {
             console.log("quizans is here", this.state.givenAns);
-            QuizAns(this.state.givenAns);
             this.setState({
                 finished: true
             });
@@ -121,24 +115,24 @@ export default class Quiz extends Component {
         this.setState({
             qCount: count
         });
+        QuizAns(this.state.givenAns);
     }
     prev() {
         let count = this.state.qCount;
         count = count - 1;
         console.log("the count in prev menu is :", count);
-        if (count > -1 && count < this.state.ques.length) {
+        if (count >= 0 && count < this.state.ques.length) {
             this.setState({
                 finished: false
             });
-        }
-        if (count === -1) {
+            this.setState({
+                qCount: count
+            });
+        } else {
             this.setState({
                 finished: true
             });
         }
-        this.setState({
-            qCount: count
-        });
     }
     click(quesKey, actualAns) {
         //todo:the quesKey == given answer and actualAns == correct
@@ -154,7 +148,6 @@ export default class Quiz extends Component {
         if (count === this.state.ques.length) {
             // console.log("answer :", quesKey, "qcount:", count, "else");
             console.log("quizans is here", this.state.givenAns);
-            QuizAns(this.state.givenAns);
             this.setState({
                 finished: true
             });
@@ -162,6 +155,7 @@ export default class Quiz extends Component {
         this.setState({
             qCount: count
         });
+        QuizAns(this.state.givenAns);
         console.log("joined:", joined, "  given ans:", this.state.givenAns); //todo : adding the given answer to array of answers
         console.log(" qCount=====", this.state.qCount);
     }
