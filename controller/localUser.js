@@ -1,7 +1,7 @@
 // localhost:4000/api/account/<Route>
 const Router = require("express").Router(),
-    User = require("../models/User"),
-    UserSession = require("../models/UserSession");
+    User = require("../models/User");
+// UserSession = require("../models/UserSession");
 // bcrypt = require("bcrypt"),
 // salt = bcrypt.genSaltSync(10);
 
@@ -10,50 +10,24 @@ Router.post("/signup", (req, res) => {
     const { body } = req;
     let { username } = body;
     const { password } = body;
-    let usernameAlreadyChosen = false;
     console.log("value recieved at /signup :", username, password);
     User.findOne({ username: username })
         .then((user, err) => {
             if (user) {
-                usernameAlreadyChosen = true;
                 if (err) {
                     return res.send({
                         success: false,
                         message: "Error: Server error"
                     });
                 }
-                const userSession = new UserSession();
-                userSession.userId = user._id;
-                req.session.user = user;
-                req.user = user;
-                userSession.save((err, doc) => {
-                    if (err) {
-                        console.log(err);
-                        return res.send({
-                            success: false,
-                            message: "Error: server error"
-                        });
-                    }
-                    return res.send({
-                        success: true,
-                        token: doc._id,
-                        message: "Valid sign in"
-                    });
-                });
                 return res.send({
-                    success: false,
-                    message: errors
+                    success: true,
+                    token: user._id,
+                    message: "Valid sign in"
                 });
             }
         })
         .then(() => {
-            if (errors || usernameAlreadyChosen) {
-                console.log("errors: ", errors);
-                return res.send({
-                    success: false,
-                    message: errors
-                });
-            }
             let newuser = new User();
             newuser.username = username;
             newuser.password = password;
@@ -77,31 +51,14 @@ Router.post("/signup", (req, res) => {
 });
 Router.get("/logout", (req, res) => {
     console.log("logging out : " + user);
-    UserSession.findOneAndUpdate(
-        {
-            _id: user.id,
-            isDeleted: false
-        },
-        {
-            $set: {
-                isDeleted: true
-            }
-        },
-        null,
-        (err, sessions) => {
-            if (err) {
-                console.log(err);
-                error = "Error: Server error";
-                return res.send({
-                    success: false,
-                    message: error
-                });
-            }
-        }
-    );
     req.session.destroy(function(err) {
         if (err) {
             console.log(err);
+            error = "Error: Server error";
+            return res.send({
+                success: false,
+                message: error
+            });
         }
     });
 });
