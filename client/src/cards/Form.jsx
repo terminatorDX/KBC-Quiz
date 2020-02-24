@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./Form.css";
 import logo from "../images/logo.svg";
+// import { LoginFetch } from "../Fetch/Post";
 const route = "http://localhost:4000";
 
 export class Form extends Component {
@@ -15,14 +16,15 @@ export class Form extends Component {
             [prop]: event.target.value
         });
     };
-    handleSubmit = e => {
+    handleSubmit = async e => {
         e.preventDefault();
         if (!this.state.username || !this.state.password) {
             alert("Please fill out the form");
             return;
         }
-
-        // Post request to backend
+        let error, loginSuccess;
+        // this.props.onLoginChange(true);
+        // const json =await LoginFetch(this.state.username, this.state.password);
         fetch(`${route}/api/account/signup`, {
             method: "POST",
             headers: {
@@ -35,21 +37,20 @@ export class Form extends Component {
         })
             .then(res => res.json())
             .then(json => {
-                this.setState({
-                    error: json.message,
-                    loginSuccess: json.success
-                });
+                error = json.message;
+                loginSuccess = json.success;
                 if (json.success) {
                     this.props.onLoginChange(true);
                     console.log("this route was successfull");
-                    this.setState({
-                        password: "",
-                        loginSuccess: true
-                    });
                 } else {
                     console.log("this route did not go through");
                 }
             });
+        this.setState({
+            error: error,
+            loginSuccess: loginSuccess
+        });
+        // Post request to backend
     };
     render() {
         return (

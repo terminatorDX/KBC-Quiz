@@ -1,4 +1,6 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose"),
+    Schema = mongoose.Schema,
+    ObjectId = Schema.Types.ObjectId;
 const UserSessionSchema = new mongoose.Schema({
     userId: {
         type: String

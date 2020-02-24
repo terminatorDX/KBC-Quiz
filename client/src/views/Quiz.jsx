@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import questions from "../data/questions";
 import { Link } from "react-router-dom";
 import "./Quiz.css";
+import { QuizAns } from "../Fetch/Post";
 export default class Quiz extends Component {
     state = {
         qCount: 0,
@@ -102,7 +103,6 @@ export default class Quiz extends Component {
         if (!this.state.givenAns[count]) {
             var joined = this.state.givenAns.concat(-1);
             this.setState({ givenAns: joined }); //todo:to add nothing in case of answered passed
-            console.log(this.state.givenAns);
         }
         count = count + 1;
         console.log("the count in next menu is :", count);
@@ -112,6 +112,8 @@ export default class Quiz extends Component {
             });
         }
         if (count === this.state.ques.length) {
+            console.log("quizans is here", this.state.givenAns);
+            QuizAns(this.state.givenAns);
             this.setState({
                 finished: true
             });
@@ -143,14 +145,16 @@ export default class Quiz extends Component {
         let count = this.state.qCount;
         count = count + 1;
         var joined = this.state.givenAns.concat(quesKey);
-        this.setState({ givenAns: joined }); //todo:to add ht e list of ques answered
+        this.setState({ givenAns: joined }); //todo:to add the list of ques answered
         if (quesKey === actualAns) {
             this.setState({
                 total: this.state.total + 1
             });
         }
         if (count === this.state.ques.length) {
-            console.log("answer :", quesKey, "qcount:", count, "else");
+            // console.log("answer :", quesKey, "qcount:", count, "else");
+            console.log("quizans is here", this.state.givenAns);
+            QuizAns(this.state.givenAns);
             this.setState({
                 finished: true
             });
@@ -166,14 +170,6 @@ export default class Quiz extends Component {
         if (finished)
             return (
                 <div className="text-center m-5 text-primary">
-                    <button
-                        onClick={() => {
-                            console.log("given ans:", this.state.givenAns);
-                        }}
-                        className="btn btn-success p-auto mx-5 my-5">
-                        <Link to="/">Retry</Link>
-                    </button>
-                    <br />{" "}
                     <div className="text-black text-center">
                         {this.previusButton(0)}
                     </div>

@@ -1,10 +1,16 @@
 const mongoose = require("mongoose"),
-    UserSchema = new mongoose.Schema({
-        id: 43243,
-        givenAns: {
-            type: Array,
-            unique: false
-        }
-    });
+    Schema = mongoose.Schema,
+    ObjectId = Schema.Types.ObjectId;
+UserSchema = new mongoose.Schema({
+    givenAns: {
+        type: Array,
+        unique: false
+    },
+    user: {
+        type: ObjectId,
+        ref: "User",
+        required: true
+    }
+});
 
 module.exports = mongoose.model("Answers", UserSchema);

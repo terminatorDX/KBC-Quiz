@@ -25,6 +25,7 @@ Router.post("/signup", (req, res) => {
                 const userSession = new UserSession();
                 userSession.userId = user._id;
                 req.session.user = user;
+                req.user = user;
                 userSession.save((err, doc) => {
                     if (err) {
                         console.log(err);
