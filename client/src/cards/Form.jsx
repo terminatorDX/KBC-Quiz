@@ -22,7 +22,6 @@ export class Form extends Component {
             alert("Please fill out the form");
             return;
         }
-        let error, loginSuccess;
         // this.props.onLoginChange(true);
         // const json =await LoginFetch(this.state.username, this.state.password);
         fetch(`${route}/api/account/signup`, {
@@ -37,19 +36,17 @@ export class Form extends Component {
         })
             .then(res => res.json())
             .then(json => {
-                error = json.message;
-                loginSuccess = json.success;
+                this.setState({
+                    error: json.error,
+                    loginSuccess: json.success
+                });
                 if (json.success) {
                     this.props.onLoginChange(true);
-                    console.log("this route was successfull");
+                    console.log("this route was : ", this.state.loginSuccess);
                 } else {
                     console.log("this route did not go through");
                 }
             });
-        this.setState({
-            error: error,
-            loginSuccess: loginSuccess
-        });
         // Post request to backend
     };
     render() {
@@ -62,41 +59,50 @@ export class Form extends Component {
                             alt="logo"
                             className="img card-image py-5"
                         />
-                        <h1 className=" text-capitalize text-white">Sign Up</h1>
-                        <p className="lead py-3 text-white">
-                            Please fill out this form to register
-                        </p>
+
                         {!this.state.loginSuccess ? (
-                            <form
-                                className="container px-5"
-                                onSubmit={this.handleSubmit}>
-                                <div className="form-group my-5">
-                                    <input
-                                        value={this.state.username}
-                                        onChange={this.handleChange("username")}
-                                        type="text"
-                                        className="from-control form-control-lg"
-                                        placeholder="Username"
-                                    />
-                                </div>
-                                <div className="form-group my-5">
-                                    <input
-                                        value={this.state.password}
-                                        onChange={this.handleChange("password")}
-                                        type="password"
-                                        className="from-control form-control-lg"
-                                        placeholder="Password"
-                                    />
-                                </div>
-                                <button
-                                    type="submit"
-                                    className="btn btn-success btn-block btn-outline py-3">
-                                    Register
-                                </button>
+                            <div>
+                                <h1 className=" text-capitalize text-white">
+                                    Sign Up
+                                </h1>
+                                <p className="lead py-3 text-white">
+                                    Please fill out this form to register
+                                </p>
+                                <form
+                                    className="container px-5"
+                                    onSubmit={this.handleSubmit}>
+                                    <div className="form-group my-5">
+                                        <input
+                                            value={this.state.username}
+                                            onChange={this.handleChange(
+                                                "username"
+                                            )}
+                                            type="text"
+                                            className="from-control form-control-lg"
+                                            placeholder="Username"
+                                        />
+                                    </div>
+                                    <div className="form-group my-5">
+                                        <input
+                                            value={this.state.password}
+                                            onChange={this.handleChange(
+                                                "password"
+                                            )}
+                                            type="password"
+                                            className="from-control form-control-lg"
+                                            placeholder="Password"
+                                        />
+                                    </div>
+                                    <button
+                                        type="submit"
+                                        className="btn btn-success btn-block btn-outline py-3">
+                                        Register
+                                    </button>
+                                </form>
                                 <h3 className="text-center text-danger">
                                     <b> {this.state.error} </b>
                                 </h3>
-                            </form>
+                            </div>
                         ) : (
                             <div>
                                 <h2 className="text-center text-primary">

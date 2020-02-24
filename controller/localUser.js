@@ -23,7 +23,7 @@ Router.post("/signup", (req, res) => {
                 return res.send({
                     success: true,
                     token: user._id,
-                    message: `Welcome back ${user.username}`
+                    message: `Welcome back ${user.username}` //TODO: check whether this message is correct
                 });
             }
         })
