@@ -42,6 +42,8 @@ export class Form extends Component {
                 });
                 if (json.success) {
                     this.props.onLoginChange(true);
+                    console.log("token is : ", json.token);
+                    this.props.onTokenChange(json.token);
                     console.log("this route was : ", this.state.loginSuccess);
                 } else {
                     console.log("this route did not go through");

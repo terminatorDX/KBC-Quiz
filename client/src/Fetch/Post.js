@@ -17,7 +17,7 @@ export function LoginFetch(username, password) {
         });
 }
 
-export function QuizAns(answers) {
+export function QuizAns(answers, token) {
     console.log("answers in post fetch : ", answers); //TODO: only 3 inputs are found instead of 4
     fetch(`${route}/answers`, {
         method: "POST",
@@ -25,7 +25,14 @@ export function QuizAns(answers) {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            givenAnswers: answers
+            givenAnswers: answers,
+            token: token
         })
-    });
+    })
+        .then(res => res.json())
+        .then(json => {
+            if (json.success) {
+                console.log("answer is sent to server");
+            }
+        });
 }

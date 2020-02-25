@@ -6,10 +6,8 @@ const User = require("../models/User"),
 Router.post("/answers", (req, res) => {
     const { body } = req;
     let { givenAnswers } = body;
-    console.log("name1 : ", req.session.user, "name2 : ", req.user); //TODO: both of these are shown as undefined
-    console.log("value recieved at /answers :", givenAnswers);
-    const findUser = req.session.user || req.user;
-    User.findOne({ username: findUser.username }).then((user, err) => {
+    console.log("at /answers :", givenAnswers, "token :", token); //todo: to get token value at the baseroutes
+    User.findOne({ _id: token }).then((user, err) => {
         //TODO: right user here is not found at all
         if (user) {
             //TODO:some other User

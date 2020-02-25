@@ -8,7 +8,8 @@ export default class Quiz extends Component {
         ques: [...questions],
         finished: false,
         givenAns: [],
-        total: 0
+        total: 0,
+        sent: false
     };
     previusButton(id) {
         if (id === 0) {
@@ -39,30 +40,34 @@ export default class Quiz extends Component {
             </button>
         );
     }
-    getClassName(value) {
+    getClassName(value, index) {
+        //todo: value is ques[qCount].options mtlb sirf 4 options
         const { qCount, givenAns, ques } = this.state;
-        if (givenAns[qCount]) {
+        if (givenAns[qCount] || givenAns[qCount] === 0) {
+            //todo:it is assuming 0 as a null
+            //todo: if answer is given
             const correctanswer = ques[qCount].answerCorrect;
-
             if (
                 givenAns[qCount] === correctanswer &&
-                correctanswer === value.key //todo: so that the answer given and the correct answer and the returned are all equal
+                correctanswer === index //todo: so that the answer given and the correct answer and the returned are all equal
             ) {
                 return (
                     <button
-                        key={value.key}
+                        key={index}
                         className="col-12 btn btn-primary disabled my-3 mx-auto">
                         <p className="lead p-auto text-dark mt-2 text-center">
                             <b>{value.ques}</b>
                         </p>
                     </button>
                 );
-            } else if (
-                correctanswer === value.key //todo: so that the correct answer is marked along
+            }
+            if (
+                givenAns[qCount] !== correctanswer &&
+                correctanswer === index //todo: so that only correct answer is marked
             ) {
                 return (
                     <button
-                        key={value.key}
+                        key={index}
                         className="col-12 btn btn-success disabled my-3 mx-auto">
                         <p className="lead text-dark mt-2 text-center">
                             <b>{value.ques}</b>
@@ -71,8 +76,9 @@ export default class Quiz extends Component {
                 );
             }
             return (
+                //todo : options which are neither correct nor given
                 <button
-                    key={value.key}
+                    key={index}
                     className="btn col-12 btn-light disabled my-3 mx-auto">
                     <p className="lead p-auto text-dark mt-2 text-center">
                         <b>{value.ques}</b>
@@ -82,10 +88,10 @@ export default class Quiz extends Component {
         }
         return (
             <button
-                key={value.key}
+                key={index}
                 className="btn col-12 btn-light my-3 mx-auto"
                 onClick={() => {
-                    this.click(value.key, ques[qCount].answerCorrect);
+                    this.click(index, ques[qCount].answerCorrect);
                 }}>
                 <p className="lead p-auto text-dark mt-2 text-center">
                     <b>{value.ques}</b>
@@ -94,9 +100,17 @@ export default class Quiz extends Component {
         );
     }
     next() {
+        console.log("next is pressed ---------------------------");
         let count = this.state.qCount;
-        if (!this.state.givenAns[count]) {
-            var joined = this.state.givenAns.concat(-1);
+        const { givenAns } = this.state;
+        if (!givenAns[count] || givenAns.length !== count) {
+            console.log(
+                " unanswers for count :",
+                count,
+                " adding -1 to givenAns :",
+                givenAns
+            );
+            var joined = givenAns.concat(-1);
             this.setState({ givenAns: joined }); //todo:to add nothing("-1") in case of next answer
         }
         count = count + 1;
@@ -107,7 +121,6 @@ export default class Quiz extends Component {
             });
         }
         if (count === this.state.ques.length) {
-            console.log("quizans is here", this.state.givenAns);
             this.setState({
                 finished: true
             });
@@ -115,9 +128,16 @@ export default class Quiz extends Component {
         this.setState({
             qCount: count
         });
-        QuizAns(this.state.givenAns);
+        if (count === 4 && !this.state.sent) {
+            console.log("quizans is here", this.state.givenAns, joined);
+            QuizAns(joined);
+            this.setState({ sent: true });
+        }
+        console.log("joined:", joined, "  given ans:", this.state.givenAns); //todo : adding the given answer to array of answers
+        console.log("qcount in NEXT():", count, " qCOunt :", this.state.qCount);
     }
     prev() {
+        console.log("prev is pressed ---------------------------------------");
         let count = this.state.qCount;
         count = count - 1;
         console.log("the count in prev menu is :", count);
@@ -135,29 +155,31 @@ export default class Quiz extends Component {
         }
     }
     click(quesKey, actualAns) {
-        //todo:the quesKey == given answer and actualAns == correct
+        console.log("an answer is clicked **********************************");
         let count = this.state.qCount;
         count = count + 1;
-        var joined = this.state.givenAns.concat(quesKey);
-        this.setState({ givenAns: joined }); //todo:to add the list of ques answered
+        var joined = this.state.givenAns.concat(quesKey); //todo:to add the list of ques answered
         if (quesKey === actualAns) {
             this.setState({
-                total: this.state.total + 1
+                total: this.state.total + 1 //todo:the quesKey is given and actualAns == correct
             });
         }
         if (count === this.state.ques.length) {
-            // console.log("answer :", quesKey, "qcount:", count, "else");
-            console.log("quizans is here", this.state.givenAns);
             this.setState({
                 finished: true
             });
         }
         this.setState({
-            qCount: count
+            qCount: count,
+            givenAns: joined
         });
-        QuizAns(this.state.givenAns);
+        if (count === 4 && joined[3] && !this.state.sent) {
+            console.log("quizans is here", this.state.givenAns, joined);
+            QuizAns(joined, this.props.token);
+            this.setState({ sent: true });
+        }
         console.log("joined:", joined, "  given ans:", this.state.givenAns); //todo : adding the given answer to array of answers
-        console.log(" qCount=====", this.state.qCount);
+        console.log("count in click():", count, " qCOunt :", this.state.qCount);
     }
     render() {
         const { qCount, ques, finished, total } = this.state;
@@ -187,8 +209,8 @@ export default class Quiz extends Component {
                         </div>
                         <div className="row">
                             <div className="col questions">
-                                {ques[qCount].options.map(value => {
-                                    return this.getClassName(value);
+                                {ques[qCount].options.map((value, index) => {
+                                    return this.getClassName(value, index);
                                 })}
                             </div>
                         </div>
