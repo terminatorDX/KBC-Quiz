@@ -8,7 +8,7 @@ const Router = require("express").Router(),
 Router.post("/signup", (req, res) => {
     let errors = "";
     const { body } = req;
-    let { username } = body;
+    const { username } = body;
     const { password } = body;
     console.log("value recieved at /signup :", username, password);
     User.findOne({ username: username })
